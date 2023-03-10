@@ -1,0 +1,11 @@
+{{#if MsgSuccess}}
+<div class="alert alert-success" role="alert">
+    Cadastro Realizado Com Sucesso!
+</div>
+{{/if}}
+
+{{#each error}}
+<div class="alert alert-danger" role="alert">
+    {{mensagem}} //Nome do atributo passado nas validações (index.js)
+</div>
+{{/each}}
