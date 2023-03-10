@@ -10,7 +10,11 @@ app.engine('hbs', hbs.engine({
 })); app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
-    res.send('ola mundo');
+    res.render('index', { NavActiveCad: true });
+})
+
+app.get('/users', (req, res) => {
+    res.render('users', { NavActiveUsers: true });
 })
 
 app.listen(PORT, () => {
