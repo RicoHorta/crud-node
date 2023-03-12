@@ -1,14 +1,19 @@
+{{!-- Operador HandleBars contrario do IF --}}
+{{#unless error}}
 <div class="bg-light p-5 rounded mt-3">
     <h1>Modificar Cadastro</h1>
-    <form action="">
+    <form action="/update" method="post">
         <div class="row mt-5">
             <div class="col-md-5 mb-3">
                 <label for="nome" class="form-label">Nome Completo</label>
-                <input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome Completo">
+                <input type="hidden" value="{{id}}" name="id">
+                <input type="text" value="{{nome}}" class="form-control" id="nome" name="nome"
+                    placeholder="Seu Nome Completo" required>
             </div>
             <div class="col-md-5 mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="nome@provedor.com.br">
+                <input type="email" value="{{email}}" class="form-control" id="email" name="email"
+                    placeholder="nome@provedor.com.br" required>
             </div>
             <div class="col-md-2">
                 <button type="submit" class="mt-4 p-2 w-100 btn btn-warning mb-3">Modificar</button>
@@ -16,3 +21,11 @@
         </div>
     </form>
 </div>
+{{else}}
+{{>_msg}}
+<div class="card bg-danger p-4 mt-5 text-white fw-bold text-center">
+    <div class="card-body">
+        Não foi possível modificar o castro de {{nome}}: {{mensagem}}
+    </div>
+</div>
+{{/unless}}

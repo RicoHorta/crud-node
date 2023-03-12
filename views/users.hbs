@@ -19,14 +19,42 @@
                 <td>
                     <div class="row g-1">
                         <div class="col-6 md-4">
-                            <a href="editar" class="p-1 w-100 btn btn-info">Editar</a>
+                            <form action="/editar" method="post">
+                                <input type="hidden" name="id" value="{{id}}"> {{!-- Campo oculto armazena ID--}}
+                                <button class="p-1 w-100 btn btn-info">Editar</button>
+                            </form>
+
                         </div>
                         <div class="col-6 md-4">
-                            <a href="#" class="p-1 w-100 btn btn-danger">Excluir</a>
+                            <button data-bs-toggle="modal" data-bs-target="#deleteModal_{{id}}"
+                                class="p-1 w-100 btn btn-danger">Excluir</button>
                         </div>
                     </div>
                 </td>
             </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal_{{id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Exclusão de Cadastro</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cancelar"></button>
+                        </div>
+                        <div class="modal-body fw-bold text-danger">
+                            Confirma a exclusão de {{nome}}?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <form action="/del" method="post">
+                                <input type="hidden" name="id" value="{{id}}"> {{!-- Campo oculto armazena ID--}}
+                                <button type="submit" class="btn btn-danger">Excluir Definitivamente</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {{/each}}
         </tbody>
     </table>

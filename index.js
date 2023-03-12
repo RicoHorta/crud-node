@@ -55,8 +55,15 @@ app.get('/users', (req, res) => {
 
 })
 
-app.get('/editar', (req, res) => {
-    res.render('editar');
+app.post('/editar', (req, res) => {
+    var id = req.body.id;
+    // metodo que consulta a tabela pela chave primaria findByPk
+    Usuario.findByPk(id).then((dados) => {
+        return res.render('editar', { error: false, id: dados.id, nome: dados.nome, email: dados.email });
+    }).catch((err) => {
+        return res.render('editar', { error: true, mensagem: 'Favor verificar os dados' });
+    });
+
 })
 
 //rota criada para receber dados do cadastro
@@ -121,6 +128,72 @@ app.post('/cad', (req, res) => {
     }
 })
 
+app.post('/update', (req, res) => {
+    // Recebe valores vindos do formulario Cadastro
+    var nome = req.body.nome;
+    var email = req.body.email;
+    // Array para receber os ERROS
+    const erros = [];
+    // remover espaços em branco antes e depois
+    // nome = nome.trim();
+
+    // limpar o nome de caracteres especiais (aceita apenas letras) Regex
+    nome = nome.replace(/[^A-zÀ-ú\s]/gi, '');
+    nome = nome.trim(); // remover espaços em branco antes e depois
+    // Vericica se é vazio ou NULL
+    if (nome == '' || typeof nome == 'undefined' || nome == null) {
+        erros.push({ mensagem: "Campo Nome não pode ser vazio" });
+    }
+    // Verifica se é mesmo um nome
+    if (!/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ'\s]+$/.test(nome)) {
+        erros.push({ mensagem: "Somente permitido letras e espaços em branco!" });
+    }
+    // Validação do email
+    email = email.toLowerCase(); //Passa para minúsculas
+    email = email.trim(); // remover espaços em branco antes e depois
+    if (email == '' || typeof email == 'undefined' || email == null) {
+        erros.push({ mensagem: "Campo Email não pode ser vazio" });
+    }
+    // Verificar se e-mail é válido com REGEX
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        erros.push({ mensagem: "Campo email inválido!" });
+    }
+    if (erros.length > 0) {
+        console.log(erros);
+        return res.status(400).send({ status: 400, erro: erros });
+    }
+    //SUCESSO! (Nenhum erro na limpeza edição)
+    // Edita os dados no MySql
+    //Usa o método create da model Usuario passando nome da coluna: nome da variável
+    Usuario.update(
+        {
+            nome: nome,
+            email: email
+        },
+        {
+            where: {
+                id: req.body.id
+            }
+        }).then(() => {
+            return res.redirect('/users');
+        }).catch((err) => {
+            console.log(err);
+            return res.status(400).send({ status: 400, erro: 'Email já cadastrado' });
+        })
+
+})
+
+app.post('/del', (req, res) => {
+    Usuario.destroy({
+        where: {
+            id: req.body.id
+        }
+    }).then((retorno) => {
+        return res.redirect('/users');
+    }).catch((err) => {
+        console.log(err);
+    })
+})
 app.listen(PORT, () => {
     console.log('Express server listening http://10.0.0.187:' + PORT);
 });
