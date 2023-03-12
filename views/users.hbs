@@ -1,6 +1,6 @@
 <div class="bg-light p-5 rounded mt-3">
     <h1>Usuários Cadastrados</h1>
-
+    {{#if table}}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -11,10 +11,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
+            {{#each usuarios}}
+            <tr> {{!-- //Como os dados já ve em formato JSon basta referenciar cada campo da tabela --}}
+                <th scope="row">{{id}}</th>
+                <td>{{nome}}</td>
+                <td>{{email}}</td>
                 <td>
                     <div class="row g-1">
                         <div class="col-6 md-4">
@@ -26,6 +27,14 @@
                     </div>
                 </td>
             </tr>
+            {{/each}}
         </tbody>
     </table>
+    {{else}}
+    <div class="card mt4">
+        <div class="card-body">
+            Nenhum cadastro encontrado.
+        </div>
+    </div>
+    {{/if}}
 </div>
